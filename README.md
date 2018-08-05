@@ -19,7 +19,7 @@ ___
 # Import
 
 ```
-import DsModal from "./ds-modal"
+import DsModal from "ds-modal"
 ```
 
 ___
