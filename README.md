@@ -1,4 +1,6 @@
-# ds-modal
+# **ds-modal** ( Don't Need jQuery )
+
+
 モーダルウィンドウ機能を実装します。
 
 - Target browser : IE9+
