@@ -1,4 +1,4 @@
-# **ds-modal** ( Don't Need jQuery )
+# ds-modal ( Don't Need jQuery )
 
 
 モーダルウィンドウ機能を実装します。
