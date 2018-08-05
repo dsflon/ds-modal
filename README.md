@@ -6,6 +6,14 @@
 
 ___
 
+# Install
+
+```
+npm i ds-modal -D
+```
+
+___
+
 # Import
 
 ```
@@ -23,6 +31,7 @@ new DsModal(element [, option]);
 |:-------|:--------|:------|:----------|
 |element|String|-(Required)|対象要素を指定します。<br>ex) ".modal"|
 |option|Object|-|ex)<br> option = {<br> width: 1024,<br> modalSpeed: 200,<br> bgColor: "#FFF",<br> bgOpacity: 0.6,<br> innerBgColor: "#FFF",<br> innerBgPadding: 20,<br> closeBtn: "&lt;img src='close.png'&gt;",<br> addClass: "wrap",<br> fixed: false<br>}|
+
 
 |Option|Data type|Default|Descroption|
 |:-------|:--------|:------|:----------|

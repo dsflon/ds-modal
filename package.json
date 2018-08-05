@@ -1,8 +1,8 @@
 {
   "name": "ds-modal",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
-  "main": "index.js",
+  "main": "./src/ds-modal.js",
   "scripts": {
     "start": "webpack-dev-server --mode development --hot --inline",
     "build": "webpack --mode production",
