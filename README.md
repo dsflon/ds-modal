@@ -54,7 +54,7 @@ ___
 
 # Demo
 
-[https://dsflon.github.io/ds-modal/](https://dsflon.github.io/ds-modal/){:target="_blank"}
+[https://dsflon.github.io/ds-modal/](https://dsflon.github.io/ds-modal/)
 
 ```
 import DsModal from "./ds-modal"
