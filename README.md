@@ -68,7 +68,7 @@ ___
 [https://dsflon.github.io/ds-modal/](https://dsflon.github.io/ds-modal/)
 
 ```
-import DsModal from "./ds-modal"
+import DsModal from "ds-modal"
 
 let dsModal = new DsModal(".modal");
 dsModal.OpenEnd = function( index ){
