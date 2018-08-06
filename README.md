@@ -11,7 +11,7 @@ ___
 # Install
 
 ```
-npm i ds-modal -D
+npm i ds-modal -S
 ```
 
 ___

@@ -1,6 +1,6 @@
 {
   "name": "ds-modal",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "",
   "main": "./src/ds-modal.js",
   "scripts": {
@@ -8,7 +8,13 @@
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development"
   },
-  "keywords": ["modal","js","library","ECMA script","not jQuery"],
+  "keywords": [
+    "modal",
+    "js",
+    "library",
+    "ECMA script",
+    "not jQuery"
+  ],
   "author": "Daiki Saito (https://github.com/dsflon)",
   "license": "MIT",
   "devDependencies": {
