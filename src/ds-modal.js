@@ -7,23 +7,26 @@ License: dsflon All Rights Reserved.
 
 */
 
-export default class DsModal {
+(function(root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(factory);
+    } else if (typeof exports === 'object') {
+        module.exports = factory();
+    } else {
+        root.DsModal = factory();
+    }
+}(this, function() {
 
-    constructor(selector, option) {
-
-        if(!selector) {
-            console.error( "Please set selector." );
-            return false;
-        };
+    function DsModal(selector, option) {
 
         this.selector = selector;
 
-        this.dsModalDetail = this.selector.split(".")[1] + "_detail";
-        this.dsModalBox = this.selector.split(".")[1] + "_box";
-        this.dsModalBoxInner = this.selector.split(".")[1] + "_box_inner";
-        this.dsModalWrap = this.selector.split(".")[1] + "_wrap";
-        this.dsModalBoxClose = this.selector.split(".")[1] + "_box_close";
-        this.dsModalBoxBg = this.selector.split(".")[1] + "_bg";
+        this.DsModalDetail = "j-modal_detail";
+        this.DsModalBox = this.selector.split(".")[1] + "_box";
+        this.DsModalBoxInner = this.selector.split(".")[1] + "_box_inner";
+        this.DsModalWrap = this.selector.split(".")[1] + "_wrap";
+        this.DsModalBoxClose = this.selector.split(".")[1] + "_box_close";
+        this.DsModalBoxBg = this.selector.split(".")[1] +"_bg";
         this.linkInnerHTML = this.selector.split(".")[1] + "_link_innerHTML";
 
         //option
@@ -43,10 +46,10 @@ export default class DsModal {
         this.OpenEnd = function(){};
         this.CloseEnd = function(){};
 
-        this.dsModalMovieHeight = (this.width / 16) * 9; //動画縦幅 16:9
-        this.dsModalImg = ".gif|.jpg|.jpeg|.png"; //画像を判別
-        this.dsModalHtml = "//|.html|.php|="; //外部HTML or PHPを判別
-        this.dsModalMovie = "youtube|youtu"; //動画を判別
+        this.DsModalMovieHeight = (this.width / 16) * 9; //動画縦幅 16:9
+        this.DsModalImg = ".gif|.jpg|.jpeg|.png"; //画像を判別
+        this.DsModalHtml = "//|.html|.php|="; //外部HTML or PHPを判別
+        this.DsModalMovie = "youtube|youtu"; //動画を判別
 
         this.target = null;
         this.index = null;
@@ -55,12 +58,13 @@ export default class DsModal {
 
         this.Init();
 
-        if(this.modal.length === 0) {
+        if(this.modal.length == 0) {
             console.error( "'" + this.selector + "' is not found" );
             return false;
         } else {
             this.CreateModalArea();
         };
+
 
     }
 
@@ -70,40 +74,36 @@ export default class DsModal {
     ** Init
     **
     **/
-    Init() {
+    DsModal.prototype.Init = function() {
+
+        var THAT = this;
 
         this.modal = document.querySelectorAll( this.selector );
 
-        this.Openfunc = (e) => {
+        this.Openfunc = function(e) {
 
             e.preventDefault();
 
-            this.target = e.currentTarget;
-            this.Set();
+            THAT.target = e.currentTarget;
+            THAT.Set();
 
         }
 
         if( this.modal[0] ) {
 
-            this.dsModalDetailElm = document.getElementsByClassName(this.dsModalDetail);
+            this.DsModalDetailElm = document.getElementsByClassName("j-modal_detail");
 
             for (var i = 0; i < this.modal.length; i++) {
+
                 this.modal[i].addEventListener( "click", this.Openfunc);
-            }
 
-            for (var i = 0; i < this.dsModalDetailElm.length; i++) {
-                this.dsModalDetailElm[i].style.display = "none";
-            }
-
-            for (var i = 0; i < this.modal.length; i++) {
-                const THIS_DATA = this.modal[i].getAttribute("href");
-                if(!THIS_DATA) this.AddClass( this.modal[i], this.linkInnerHTML );
             }
 
         }
+
     }
 
-    ReInit() {
+    DsModal.prototype.ReInit = function() {
 
         for (var i = 0; i < this.modal.length; i++) {
 
@@ -116,115 +116,129 @@ export default class DsModal {
     }
 
 
-    CreateModalArea() {
+    DsModal.prototype.CreateModalArea = function() {
 
-        let modalAppendHTML  = '<div id="'+ this.dsModalBox +'" class="'+ this.addClass +'">';
-            modalAppendHTML += '<div id="'+ this.dsModalBoxInner +'">';
-            modalAppendHTML += '<div id="'+ this.dsModalWrap +'"></div>';
-            modalAppendHTML += '<p id="'+ this.dsModalBoxClose +'">'+ this.closeBtn +'</p>';
+        var THAT  = this;
+
+        var modalAppendHTML  = '<div id="'+ this.DsModalBox +'" class="'+ this.addClass +'">';
+            modalAppendHTML += '<div id="'+ this.DsModalBoxInner +'">';
+            modalAppendHTML += '<div id="'+ this.DsModalWrap +'"></div>';
+            modalAppendHTML += '<p id="'+ this.DsModalBoxClose +'">'+ this.closeBtn +'</p>';
             modalAppendHTML += '</div>';
             modalAppendHTML += '</div>';
-            modalAppendHTML += '<div id="'+ this.dsModalBoxBg +'"></div>';
+            modalAppendHTML += '<div id="'+ this.DsModalBoxBg +'"></div>';
 
-        this.dsModalBoxCSS =  "position: " + ( this.fixed ? "fixed" : "absolute" ) + "; ";
-        this.dsModalBoxCSS += "top: " + ( this.fixed ? "50%" : "0" ) + "; ";
-        this.dsModalBoxCSS += "left: 50%; ";
-        this.dsModalBoxCSS += "z-index: 10001; ";
-        this.dsModalBoxCSS += "width: 100%; ";
-        this.dsModalBoxCSS += "cursor: pointer; ";
-        this.dsModalBoxCSS += "transform: " + ( this.fixed ? "translate(-50%,-50%)" : "translate(-50%,0)" ) + "; ";
-        this.dsModalBoxCSS += "-ms-transform: " + ( this.fixed ? "translate(-50%,-50%)" : "translate(-50%,0)" ) + "; ";
-        this.dsModalBoxCSS += "-webkit-transform: " + ( this.fixed ? "translate(-50%,-50%)" : "translate(-50%,0)" ) + "; ";
-        this.dsModalBoxCSS += "opacity: 0; ";
-        this.dsModalBoxCSS += "pointer-events: none; "
+        this.DsModalBoxCSS =  "position: " + ( this.fixed ? "fixed" : "absolute" ) + "; ";
+        this.DsModalBoxCSS += "top: " + ( this.fixed ? "50%" : "0" ) + "; ";
+        this.DsModalBoxCSS += "left: 0; ";
+        this.DsModalBoxCSS += "right: 0; ";
+        this.DsModalBoxCSS += "margin: auto; ";
+        this.DsModalBoxCSS += "z-index: 10001; ";
+        this.DsModalBoxCSS += "width: 100%; ";
+        this.DsModalBoxCSS += "cursor: pointer; ";
+        this.DsModalBoxCSS += "transform: " + ( this.fixed ? "translate(0,-50%)" : "translate(0,0)" ) + "; ";
+        this.DsModalBoxCSS += "-ms-transform: " + ( this.fixed ? "translate(0,-50%)" : "translate(0,0)" ) + "; ";
+        this.DsModalBoxCSS += "-webkit-transform: " + ( this.fixed ? "translate(0,-50%)" : "translate(0,0)" ) + "; ";
+        this.DsModalBoxCSS += "opacity: 0; ";
+        this.DsModalBoxCSS += "pointer-events: none; "
 
-        this.dsModalBoxBgCSS = "position: fixed; ";
-        this.dsModalBoxBgCSS += "left: 0; ";
-        this.dsModalBoxBgCSS += "top: 0; " ;
-        this.dsModalBoxBgCSS += "width: 100%; ";
-        this.dsModalBoxBgCSS += "height: 200%; ";
-        this.dsModalBoxBgCSS += "background:" + this.bgColor + "; ";
-        this.dsModalBoxBgCSS += "transition: all "+ this.modalSpeed/1000 +"s ease; ";
-        this.dsModalBoxBgCSS += "-webkit-transition: all "+ this.modalSpeed/1000 +"s ease; ";
-        this.dsModalBoxBgCSS += "z-index: 10000; ";
-        this.dsModalBoxBgCSS += "cursor: pointer; ";
-        this.dsModalBoxBgCSS += "opacity: 0; ";
-        this.dsModalBoxBgCSS += "pointer-events: none; ";
+        this.DsModalBoxBgCSS = "position: fixed; ";
+        this.DsModalBoxBgCSS += "left: 0; ";
+        this.DsModalBoxBgCSS += "top: 0; " ;
+        this.DsModalBoxBgCSS += "width: 100%; ";
+        this.DsModalBoxBgCSS += "height: 200%; ";
+        this.DsModalBoxBgCSS += "background:" + this.bgColor + "; ";
+        this.DsModalBoxBgCSS += "transition: all "+ this.modalSpeed/1000 +"s ease; ";
+        this.DsModalBoxBgCSS += "-webkit-transition: all "+ this.modalSpeed/1000 +"s ease; ";
+        this.DsModalBoxBgCSS += "z-index: 10000; ";
+        this.DsModalBoxBgCSS += "cursor: pointer; ";
+        this.DsModalBoxBgCSS += "opacity: 0; ";
+        this.DsModalBoxBgCSS += "pointer-events: none; ";
 
-        let dsModalBoxCloseCSS =  "position: absolute; ";
-            dsModalBoxCloseCSS += "right: 0; ";
-            dsModalBoxCloseCSS += "top: -50px; ";
-            dsModalBoxCloseCSS += "z-index: 10000; ";
-            dsModalBoxCloseCSS += "cursor: pointer; ";
-            dsModalBoxCloseCSS += "color: #FFF; ";
-            dsModalBoxCloseCSS += "font-size: 40px; ";
-            dsModalBoxCloseCSS += "line-height: 1; ";
-            dsModalBoxCloseCSS += "margin: 0; ";
+        var DsModalBoxCloseCSS =  "position: absolute; ";
+            DsModalBoxCloseCSS += "right: 0; ";
+            DsModalBoxCloseCSS += "top: -50px; ";
+            DsModalBoxCloseCSS += "z-index: 10000; ";
+            DsModalBoxCloseCSS += "cursor: pointer; ";
+            DsModalBoxCloseCSS += "color: #FFF; ";
+            DsModalBoxCloseCSS += "font-size: 40px; ";
+            DsModalBoxCloseCSS += "line-height: 1; ";
+            DsModalBoxCloseCSS += "margin: 0; ";
 
-        this.dsModalBoxInnerCSS =  "background: " + this.innerBgColor + "; ";
-        this.dsModalBoxInnerCSS += "padding: " + this.innerBgPadding + "px; ";
-        this.dsModalBoxInnerCSS += "position: relative; ";
-        this.dsModalBoxInnerCSS += "cursor: default; ";
+        this.DsModalBoxInnerCSS =  "background: " + this.innerBgColor + "; ";
+        this.DsModalBoxInnerCSS += "padding: " + this.innerBgPadding + "px; ";
+        this.DsModalBoxInnerCSS += "position: relative; ";
+        this.DsModalBoxInnerCSS += "cursor: default; ";
 
-        this.dsModalBoxImgCSS = "padding: 0; "
-        this.dsModalBoxImgCSS += "background: none; "
+        this.DsModalBoxImgCSS = "padding: 0; "
+        this.DsModalBoxImgCSS += "background: none; "
 
-        this.dsModalImgCSS =  "height: auto; ";
-        this.dsModalImgCSS += "max-width: 100%; ";
-        this.dsModalImgCSS += "display: block; ";
-        this.dsModalImgCSS += "margin: 0 auto; "
+        this.DsModalImgCSS =  "height: auto; ";
+        this.DsModalImgCSS += "max-width: 100%; ";
+        this.DsModalImgCSS += "display: block; ";
+        this.DsModalImgCSS += "margin: 0 auto; "
 
-        this.dsModalBoxMovieCSS =  "padding: 0; ";
-        this.dsModalBoxMovieCSS += "background: none; ";
-        this.dsModalBoxMovieCSS += "height: 0; ";
-        this.dsModalBoxMovieCSS += "position: relative; ";
-        this.dsModalBoxMovieCSS += "padding-bottom: 56.25%; "
+        this.DsModalBoxMovieCSS =  "padding: 0; ";
+        this.DsModalBoxMovieCSS += "background: none; ";
+        this.DsModalBoxMovieCSS += "height: 0; ";
+        this.DsModalBoxMovieCSS += "position: relative; ";
+        this.DsModalBoxMovieCSS += "padding-bottom: 56.25%; "
 
-        this.dsModalBoxMovieIframeCSS =  "display: block; ";
-        this.dsModalBoxMovieIframeCSS += "height: 100%; ";
-        this.dsModalBoxMovieIframeCSS += "position: absolute; ";
-        this.dsModalBoxMovieIframeCSS += "left: 0; ";
-        this.dsModalBoxMovieIframeCSS += "top: 0; ";
-        this.dsModalBoxMovieIframeCSS += "width: 100%; "
+        this.DsModalBoxMovieIframeCSS =  "display: block; ";
+        this.DsModalBoxMovieIframeCSS += "height: 100%; ";
+        this.DsModalBoxMovieIframeCSS += "position: absolute; ";
+        this.DsModalBoxMovieIframeCSS += "left: 0; ";
+        this.DsModalBoxMovieIframeCSS += "top: 0; ";
+        this.DsModalBoxMovieIframeCSS += "width: 100%; "
 
         if( this.modal ) {
 
             document.getElementsByTagName("body")[0].insertAdjacentHTML("beforeend",modalAppendHTML);
 
-            this.dsModalBoxElm = document.getElementById(this.dsModalBox);
-            this.dsModalBoxInnerElm = document.getElementById(this.dsModalBoxInner);
-            this.dsModalBoxCloseElm = document.getElementById(this.dsModalBoxClose);
-            this.dsModalBoxBgElm = document.getElementById(this.dsModalBoxBg);
+            this.DsModalBoxElm = document.getElementById(this.DsModalBox);
+            this.DsModalBoxInnerElm = document.getElementById(this.DsModalBoxInner);
+            this.DsModalBoxCloseElm = document.getElementById(this.DsModalBoxClose);
+            this.DsModalBoxBgElm = document.getElementById(this.DsModalBoxBg);
             this.linkInnerHTMLElm = document.getElementsByClassName(this.linkInnerHTML);
 
-            this.dsModalBoxElm.style.cssText = this.dsModalBoxCSS;
-            this.dsModalBoxInnerElm.style.cssText = this.dsModalBoxInnerCSS;
-            this.dsModalBoxBgElm.style.cssText = this.dsModalBoxBgCSS;
-            this.dsModalBoxCloseElm.style.cssText = dsModalBoxCloseCSS;
+            this.DsModalBoxElm.style.cssText = this.DsModalBoxCSS;
+            this.DsModalBoxInnerElm.style.cssText = this.DsModalBoxInnerCSS;
+            this.DsModalBoxBgElm.style.cssText = this.DsModalBoxBgCSS;
+            this.DsModalBoxCloseElm.style.cssText = DsModalBoxCloseCSS;
+
+            for (var i = 0; i < this.DsModalDetailElm.length; i++) {
+                this.DsModalDetailElm[i].style.display = "none";
+            }
+
+            for (var i = 0; i < this.modal.length; i++) {
+                var THIS_DATA = this.modal[i].getAttribute("href");
+                if(!THIS_DATA) this.AddClass(this.modal[i],this.linkInnerHTML);
+            }
 
             if( !this.modal[0].classList ) { //IE9
-                this.dsModalBoxElm.style.display = "none";
-                this.dsModalBoxBgElm.style.display = "none";
+                this.DsModalBoxElm.style.display = "none";
+                this.DsModalBoxBgElm.style.display = "none";
             }
 
         }
 
 
-        const CloseFunc = (e) => {
+        var CloseFunc = function(e) {
             e.preventDefault();
-            this.Close();
+            THAT.Close();
         }
 
-        this.dsModalBoxCloseElm = document.getElementById(this.dsModalBoxClose);
-        this.dsModalBoxBgElm = document.getElementById(this.dsModalBoxBg);
+        this.DsModalBoxCloseElm = document.getElementById(this.DsModalBoxClose);
+        this.DsModalBoxBgElm = document.getElementById(this.DsModalBoxBg);
 
-        this.dsModalBoxCloseElm.addEventListener("click", CloseFunc);
-        this.dsModalBoxBgElm.addEventListener("click", CloseFunc);
+        this.DsModalBoxCloseElm.addEventListener("click", CloseFunc);
+        this.DsModalBoxBgElm.addEventListener("click", CloseFunc);
+
 
     }
     //CreateModalArea
 
-    Open( elm ) {
+    DsModal.prototype.Open = function( elm ) {
 
         if( this.modal[0] ) {
 
@@ -240,25 +254,25 @@ export default class DsModal {
 
     }
 
-    Set() {
+    DsModal.prototype.Set = function() {
 
-        const THIS_DATA = this.target.getAttribute("href");
-        const THIS_DATA_STRING = new String( THIS_DATA );
+        var THIS_DATA = this.target.getAttribute("href");
+        var THIS_DATA_STRING = new String( THIS_DATA );
         this.index = Array.prototype.indexOf.call(this.modal, this.target);
 
         this.scrollVal = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
 
         if( THIS_DATA ) {
 
-            if( THIS_DATA_STRING.match( this.dsModalImg ) ) {//hrefが画像の場合
+            if( THIS_DATA_STRING.match( this.DsModalImg ) ) {//hrefが画像の場合
 
                 this.IfImage( THIS_DATA );
 
-            } else if( THIS_DATA_STRING.match( this.dsModalMovie ) ) {//hrefがyoutubeの場合
+            } else if( THIS_DATA_STRING.match( this.DsModalMovie ) ) {//hrefがyoutubeの場合
 
                 this.IfYoutube( THIS_DATA );
 
-            } else if( THIS_DATA_STRING.match( this.dsModalHtml)  ) {//hrefが外部HTMLの場合
+            } else if( THIS_DATA_STRING.match( this.DsModalHtml)  ) {//hrefが外部HTMLの場合
 
                 this.IfOuterHTML( THIS_DATA );
 
@@ -273,67 +287,70 @@ export default class DsModal {
     }
     //Set
 
-    IfImage(thisData) {
+    DsModal.prototype.IfImage = function(thisData) {
 
+        var THAT = this;
 
-        let modalAppendHTML  = '<img src="'+ thisData +'" class="j-modal_img">';
+        var modalAppendHTML  = '<img src="'+ thisData +'" class="j-modal_img">';
 
-        const IMG = new Image();
+        var IMG = new Image();
         IMG.src = thisData;
 
-        this.AddClass( this.dsModalBoxInnerElm, "j-modal_img" );
-        this.dsModalBoxInnerElm.style.cssText = this.dsModalBoxImgCSS;
+        this.AddClass(this.DsModalBoxInnerElm,"j-modal_img");
+        this.DsModalBoxInnerElm.style.cssText = this.DsModalBoxImgCSS;
 
-        this.dsModalWrapElm = this.dsModalBoxInnerElm.querySelectorAll("#" + this.dsModalWrap)[0];
-        this.dsModalWrapElm.innerHTML = modalAppendHTML;
+        this.DsModalWrapElm = this.DsModalBoxInnerElm.querySelectorAll("#" + this.DsModalWrap)[0];
+        this.DsModalWrapElm.innerHTML = modalAppendHTML;
 
-        document.getElementsByClassName("j-modal_img")[0].style.cssText = this.dsModalImgCSS;
+        document.getElementsByClassName("j-modal_img")[0].style.cssText = this.DsModalImgCSS;
 
-        IMG.onload = () => {
-            this.Ready();
+        IMG.onload = function() {
+            THAT.Ready();
         };
 
     }
     //IfImage
-    IfYoutube(thisData) {
+    DsModal.prototype.IfYoutube = function(thisData) {
 
-        const THIS_ID = thisData.split("/")[3];
-        let modalAppendHTML  = '<iframe src="https://www.youtube.com/embed/'+ THIS_ID +'?autoplay=1&rel=0&playsinline=1" allowfullscreen="true" frameborder="0"></iframe>';
+        var THIS_ID = thisData.split("/")[3];
+        var modalAppendHTML  = '<iframe src="https://www.youtube.com/embed/'+ THIS_ID +'?autoplay=1&rel=0&playsinline=1" allowfullscreen="true" frameborder="0"></iframe>';
 
-        this.AddClass( this.dsModalBoxInnerElm, "j-modal_movie" );
-        this.dsModalBoxInnerElm.style.cssText = this.dsModalBoxImgCSS;
+        this.AddClass(this.DsModalBoxInnerElm,"j-modal_movie");
+        this.DsModalBoxInnerElm.style.cssText = this.DsModalBoxImgCSS;
 
-        this.dsModalWrapElm = this.dsModalBoxInnerElm.querySelectorAll("#" + this.dsModalWrap)[0];
-        this.dsModalWrapElm.style.cssText = this.dsModalBoxMovieCSS;
-        this.dsModalWrapElm.innerHTML = modalAppendHTML;
+        this.DsModalWrapElm = this.DsModalBoxInnerElm.querySelectorAll("#" + this.DsModalWrap)[0];
+        this.DsModalWrapElm.style.cssText = this.DsModalBoxMovieCSS;
+        this.DsModalWrapElm.innerHTML = modalAppendHTML;
 
-        this.dsModalWrapElm.getElementsByTagName("iframe")[0].style.cssText = this.dsModalBoxMovieIframeCSS;
+        this.DsModalWrapElm.getElementsByTagName("iframe")[0].style.cssText = this.DsModalBoxMovieIframeCSS;
 
         this.Ready();
 
     }
     //IfYoutube
-    IfOuterHTML(thisData) {
+    DsModal.prototype.IfOuterHTML = function(thisData) {
 
-        const TYPE = this.target.getAttribute("data-ModalType");
+        var THAT = this;
+
+        var TYPE = this.target.getAttribute("data-ModalType");
 
         if(!TYPE) {
 
-            const REQUEST = new XMLHttpRequest();
+            var REQUEST = new XMLHttpRequest();
             REQUEST.open("GET", thisData, true);
             REQUEST.timeout = 3000;
 
-            REQUEST.onload = (event) => {
+            REQUEST.onload = function(event) {
 
                 if (REQUEST.readyState === 4) {
                     if (REQUEST.status === 200) {
 
-                        this.dsModalBoxInnerElm.style.cssText = this.dsModalBoxInnerCSS;
+                        THAT.DsModalBoxInnerElm.style.cssText = THAT.DsModalBoxInnerCSS;
 
-                        this.dsModalWrapElm = this.dsModalBoxInnerElm.querySelectorAll("#" + this.dsModalWrap)[0];
-                        this.dsModalWrapElm.innerHTML = REQUEST.responseText;
+                        THAT.DsModalWrapElm = THAT.DsModalBoxInnerElm.querySelectorAll("#" + THAT.DsModalWrap)[0];
+                        THAT.DsModalWrapElm.innerHTML = REQUEST.responseText;
 
-                        this.Ready();
+                        THAT.Ready();
 
                     } else {
                         console.error("This request got an error.");
@@ -341,26 +358,26 @@ export default class DsModal {
                 }
 
             };
-            REQUEST.ontimeout = (event) => {
-                console.error("The request for " + thisData + " timed out.");
+            REQUEST.ontimeout = function(event) {
+                alert("The request for " + thisData + " timed out.");
             };
-            REQUEST.onerror = (event) => {
+            REQUEST.onerror = function(event) {
                 console.error("This request got an error.");
             };
             REQUEST.send(null);
 
         } else if (TYPE == "iframe") {
 
-            let height = window.innerHeight * 0.8;
-            let modalHeight = this.target.getAttribute("data-modalHeight")
+            var height = window.innerHeight * 0.8;
+            var modalHeight = this.target.getAttribute("data-modalHeight")
             if( modalHeight ) height = modalHeight;
 
-            let modalAppendHTML  = '<iframe src="'+ thisData +'" width="100%" height="'+ height +'" frameborder="0"></iframe>';
+            var modalAppendHTML  = '<iframe src="'+ thisData +'" width="100%" height="'+ height +'" frameborder="0"></iframe>';
 
-            this.dsModalBoxInnerElm.style.cssText = this.dsModalBoxImgCSS;
+            this.DsModalBoxInnerElm.style.cssText = this.DsModalBoxImgCSS;
 
-            this.dsModalWrapElm = this.dsModalBoxInnerElm.querySelectorAll("#" + this.dsModalWrap)[0];
-            this.dsModalWrapElm.innerHTML = modalAppendHTML;
+            this.DsModalWrapElm = this.DsModalBoxInnerElm.querySelectorAll("#" + this.DsModalWrap)[0];
+            this.DsModalWrapElm.innerHTML = modalAppendHTML;
 
             this.Ready();
 
@@ -368,15 +385,15 @@ export default class DsModal {
 
     }
     //IfOuterHTML
-    IfInnerHTML() {
+    DsModal.prototype.IfInnerHTML = function() {
 
-        const INDEX = Array.prototype.indexOf.call(this.linkInnerHTMLElm, this.target);
-        const THIS_HTML = this.dsModalDetailElm[ INDEX ].innerHTML;
+        var INDEX = Array.prototype.indexOf.call(this.linkInnerHTMLElm, this.target);
+        var THIS_HTML = this.DsModalDetailElm[ INDEX ].innerHTML;
 
-        this.dsModalBoxInnerElm.style.cssText = this.dsModalBoxInnerCSS;
+        this.DsModalBoxInnerElm.style.cssText = this.DsModalBoxInnerCSS;
 
-        this.dsModalWrapElm = this.dsModalBoxInnerElm.querySelectorAll("#" + this.dsModalWrap)[0];
-        this.dsModalWrapElm.innerHTML = THIS_HTML;
+        this.DsModalWrapElm = this.DsModalBoxInnerElm.querySelectorAll("#" + this.DsModalWrap)[0];
+        this.DsModalWrapElm.innerHTML = THIS_HTML;
 
         this.Ready();
 
@@ -388,21 +405,23 @@ export default class DsModal {
     ** Ready
     **
     **/
-    Ready() {
+    DsModal.prototype.Ready = function() {
 
-        let width = this.target.getAttribute("data-modalWidth");
-        let height = this.target.getAttribute("data-modalHeight");
+        var THAT = this;
+
+        var width = this.target.getAttribute("data-modalWidth");
+        var height = this.target.getAttribute("data-modalHeight");
 
         width = width ? width : this.width + "px";
-        height = height ? height : "initial";
+        height = height ? height : "inherit";
 
-        this.dsModalBoxElm.style.maxWidth = width;
-        this.dsModalBoxElm.style.height = height;
-        this.dsModalBoxElm.style.transition = "initial";
-        this.dsModalBoxElm.style.setProperty("-webkit-transition", "initial");
+        this.DsModalBoxElm.style.maxWidth = width;
+        this.DsModalBoxElm.style.height = height;
+        this.DsModalBoxElm.style.transition = "inherit";
+        this.DsModalBoxElm.style.setProperty("-webkit-transition", "inherit");
 
-        setTimeout( () => {
-            this.Show();
+        setTimeout( function() {
+            THAT.Show();
         }, 10 );
 
     }
@@ -414,49 +433,50 @@ export default class DsModal {
     ** Show
     **
     **/
-    Show() {
+    DsModal.prototype.Show = function() {
 
-        const WIN_HEIGHT = window.innerHeight;
-        const THIS_HEIGHT = this.dsModalBoxElm.scrollHeight;
-        const FIX = (WIN_HEIGHT - THIS_HEIGHT) / 2;
+        var THAT = this;
+
+        var WIN_HEIGHT = window.innerHeight;
+        var THIS_HEIGHT = this.DsModalBoxElm.scrollHeight;
+        var FIX = (WIN_HEIGHT - THIS_HEIGHT) / 2;
 
         if( !this.fixed ) { //absolute の場合 : モーダル表示位置計算
 
-            this.dsModalBoxElm.style.top = WIN_HEIGHT > THIS_HEIGHT ? (this.scrollVal + FIX) + "px" : (this.scrollVal + 40) + "px";
+            this.DsModalBoxElm.style.top = WIN_HEIGHT > THIS_HEIGHT ? (this.scrollVal + FIX) + "px" : (this.scrollVal + 40) + "px";
 
         } else { //fixed の場合
 
             this.tagHTML.style.position = "fixed";
             this.tagHTML.style.width = "100%";
             this.tagHTML.style.top = -this.scrollVal + "px";
-
         }
 
-        setTimeout( () => {
+        setTimeout( function() {
 
-            if( !this.modal[0].classList ) { //IE9
+            if( !THAT.modal[0].classList ) { //IE9
 
-                this.dsModalBoxElm.style.opacity = 1;
-                this.dsModalBoxBgElm.style.opacity = 1;
-                this.dsModalBoxElm.style.display = "block";
-                this.dsModalBoxBgElm.style.display = "block";
+                THAT.DsModalBoxElm.style.opacity = 1;
+                THAT.DsModalBoxBgElm.style.opacity = 1;
+                THAT.DsModalBoxElm.style.display = "block";
+                THAT.DsModalBoxBgElm.style.display = "block";
 
             } else {
 
-                this.dsModalBoxElm.style.opacity = 1;
-                this.dsModalBoxElm.style.pointerEvents = "inherit";
-                this.dsModalBoxElm.style.transition = "all " + this.modalSpeed / 1000 + "s ease";
-                this.dsModalBoxElm.style.setProperty("-webkit-transition", "all " + this.modalSpeed / 1000 + "s ease");
+                THAT.DsModalBoxElm.style.opacity = 1;
+                THAT.DsModalBoxElm.style.pointerEvents = "inherit";
+                THAT.DsModalBoxElm.style.transition = "all " + THAT.modalSpeed / 1000 + "s ease";
+                THAT.DsModalBoxElm.style.setProperty("-webkit-transition", "all " + THAT.modalSpeed / 1000 + "s ease");
 
-                this.dsModalBoxBgElm.style.opacity = this.bgOpacity;
-                this.dsModalBoxBgElm.style.pointerEvents = "inherit";
+                THAT.DsModalBoxBgElm.style.opacity = THAT.bgOpacity;
+                THAT.DsModalBoxBgElm.style.pointerEvents = "inherit";
 
-                const EndFunc = () => {
-                    this.OpenEnd( this.index );
-                    this.dsModalBoxElm.removeEventListener("transitionend", EndFunc, false);
+                var EndFunc = function() {
+                    THAT.OpenEnd( THAT.index );
+                    THAT.DsModalBoxElm.removeEventListener("transitionend", EndFunc, false);
                 };
 
-                this.dsModalBoxElm.addEventListener("transitionend", EndFunc, false);
+                THAT.DsModalBoxElm.addEventListener("transitionend", EndFunc, false);
 
             }
 
@@ -470,33 +490,35 @@ export default class DsModal {
     ** Close
     **
     **/
-    Close() {
+    DsModal.prototype.Close = function() {
 
-        this.dsModalBoxElm.style.opacity = 0;
-        this.dsModalBoxElm.style.pointerEvents = "none";
+        var THAT = this;
 
-        this.dsModalBoxBgElm.style.opacity = 0;
-        this.dsModalBoxBgElm.style.pointerEvents = "none";
+        this.DsModalBoxElm.style.opacity = 0;
+        this.DsModalBoxElm.style.pointerEvents = "none";
 
-        const EndFunc = () => {
+        this.DsModalBoxBgElm.style.opacity = 0;
+        this.DsModalBoxBgElm.style.pointerEvents = "none";
 
-            this.dsModalBoxInnerElm.setAttribute("class", false);
-            this.dsModalWrapElm.setAttribute("style", false)
-            this.dsModalWrapElm.innerHTML = "";
+        var EndFunc = function() {
 
-            this.CloseEnd();
+            THAT.DsModalBoxInnerElm.setAttribute("class", false);
+            THAT.DsModalWrapElm.setAttribute("style", false)
+            THAT.DsModalWrapElm.innerHTML = "";
 
-            this.dsModalBoxElm.removeEventListener("transitionend", EndFunc, false);
+            THAT.CloseEnd();
+
+            THAT.DsModalBoxElm.removeEventListener("transitionend", EndFunc, false);
 
         };
 
-        this.dsModalBoxElm.addEventListener("transitionend", EndFunc, false);
+        this.DsModalBoxElm.addEventListener("transitionend", EndFunc, false);
 
         //
 
         if( !this.modal[0].classList ) { //IE9
-            this.dsModalBoxElm.style.display = "none";
-            this.dsModalBoxBgElm.style.display = "none";
+            this.DsModalBoxElm.style.display = "none";
+            this.DsModalBoxBgElm.style.display = "none";
         }
 
         if( this.fixed ) { //fixed の場合
@@ -506,9 +528,10 @@ export default class DsModal {
             window.scroll( 0, this.scrollVal );
 
         }
+
     }
 
-    AddClass( element, _className ){
+    DsModal.prototype.AddClass = function( element, _className ) {
 
         if (element.classList) {
             element.classList.add(_className);
@@ -518,4 +541,6 @@ export default class DsModal {
 
     }
 
-}
+    return DsModal;
+
+}));
