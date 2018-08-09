@@ -21,7 +21,7 @@ License: dsflon All Rights Reserved.
 
         this.selector = selector;
 
-        this.DsModalDetail = "j-modal_detail";
+        this.DsModalDetail = this.selector.split(".")[1] + "_detail";
         this.DsModalBox = this.selector.split(".")[1] + "_box";
         this.DsModalBoxInner = this.selector.split(".")[1] + "_box_inner";
         this.DsModalWrap = this.selector.split(".")[1] + "_wrap";
